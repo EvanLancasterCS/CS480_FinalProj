@@ -52,9 +52,19 @@ class Graphics
     GLint m_hasTexture;
 
 
-    Sphere* m_sphere;
-    Sphere* m_sphere2;
-    Sphere* m_sphere3;
+    Sphere* m_sun; //done
+    Sphere* m_moon; //done
+    Sphere* m_earth; //done
+    Sphere* m_ceres; //done
+    Sphere* m_eris; //done
+    Sphere* m_haumea;//done
+    Sphere* m_jupiter;//done
+    Sphere* m_mars;//done
+    Sphere* m_mercury;//done
+    Sphere* m_neptune;//done
+    Sphere* m_saturn;//done
+    Sphere* m_uranus;//done
+    Sphere* m_venus;//done
 
     skybox* m_skybox;
     Shader* m_skyshader;

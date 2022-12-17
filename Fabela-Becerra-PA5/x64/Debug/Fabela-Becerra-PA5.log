@@ -1,5 +1,2 @@
-﻿  mesh.cpp
-C:\Users\Evan\Desktop\PA-5\Fabela-Becerra-PA5\mesh.cpp(203,71): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-C:\Users\Evan\Desktop\PA-5\Fabela-Becerra-PA5\mesh.cpp(243,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Evan\Desktop\PA-5\Fabela-Becerra-PA5\mesh.cpp(260): warning C4715: 'Mesh::loadModelFromFile': not all control paths return a value
-  Fabela-Becerra-PA5.vcxproj -> C:\Users\Evan\Desktop\PA-5\x64\Debug\Fabela-Becerra-PA5.exe
+﻿  graphics.cpp
+  Fabela-Becerra-PA5.vcxproj -> C:\Users\Ed\source\repos\CS480_FinalProj\x64\Debug\Fabela-Becerra-PA5.exe
