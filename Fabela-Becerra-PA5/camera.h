@@ -7,38 +7,39 @@ enum Camera_Movement {
     FORWARD,
     BACKWARD,
     LEFT,
-    RIGHT
+    RIGHT,
+    ROLL_CW,
+    ROLL_CCW,
+    BRAKE
 };
 
 // Default camera values
-const float YAW = -90.0f;
+const float YAW = -85.0f;
 const float PITCH = 0.0f;
 const float SPEED = 3.5f;
 const float SENSITIVITY = 0.1f;
 
+class Mesh;
 
 class Camera
 {
   public:
     Camera();
     ~Camera();
-    void Update();
+    void Update(glm::vec3 focus, glm::vec3 frontVec, glm::vec3 upVec);
     bool Initialize(int w, int h);
     glm::mat4 GetProjection();
     glm::mat4 GetView();
 
-    void ProcessKeyboard(Camera_Movement direction, float deltaTime);
-    void ProcessMouseMovement(float xoffset, float yoffset);
+    //void ProcessKeyboard(Camera_Movement direction, float deltaTime);
+    //void ProcessMouseMovement(float xoffset, float yoffset);
     void ProcessScrollMovement(float yoffset);
-
 
     // euler Angles
     float Yaw = YAW;
     float Pitch = PITCH;
 
     // camera options
-    float MovementSpeed = SPEED;
-    float MouseSensitivity = SENSITIVITY;
     float aspect = 0;
     float fov = 40.f;
   private:
@@ -55,6 +56,8 @@ class Camera
     glm::vec3 cameraUp = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 cameraRight;
     glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+
+    Mesh* test;
 
     void UpdateCameraVectors();
 };

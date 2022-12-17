@@ -39,6 +39,7 @@ bool Engine::Initialize()
   }
 
   m_camera = m_graphics->getCamera();
+  m_ship = m_graphics->getShip();
   glfwSetCursorPosCallback(m_window->getWindow(), cursorPositionCallBack);
   glfwSetInputMode(m_window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glfwSetScrollCallback(m_window->getWindow(), scrollwheel_callback);
@@ -70,16 +71,25 @@ void Engine::ProcessInput()
         glfwSetWindowShouldClose(m_window->getWindow(), true);
 
     if (glfwGetKey(m_window->getWindow(), GLFW_KEY_W) == GLFW_PRESS)
-        m_camera->ProcessKeyboard(FORWARD, deltaTime);
+        m_ship->ProcessKeyboard(FORWARD, deltaTime);
 
     if (glfwGetKey(m_window->getWindow(), GLFW_KEY_S) == GLFW_PRESS)
-        m_camera->ProcessKeyboard(BACKWARD, deltaTime);
+        m_ship->ProcessKeyboard(BACKWARD, deltaTime);
 
     if (glfwGetKey(m_window->getWindow(), GLFW_KEY_A) == GLFW_PRESS)
-        m_camera->ProcessKeyboard(LEFT, deltaTime);
+        m_ship->ProcessKeyboard(LEFT, deltaTime);
 
     if (glfwGetKey(m_window->getWindow(), GLFW_KEY_D) == GLFW_PRESS)
-        m_camera->ProcessKeyboard(RIGHT, deltaTime);
+        m_ship->ProcessKeyboard(RIGHT, deltaTime);
+
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_Q) == GLFW_PRESS)
+        m_ship->ProcessKeyboard(ROLL_CCW, deltaTime);
+
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_E) == GLFW_PRESS)
+        m_ship->ProcessKeyboard(ROLL_CW, deltaTime);
+
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_SPACE) == GLFW_PRESS)
+        m_ship->ProcessKeyboard(BRAKE, deltaTime);
 }
 
 void Engine::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
@@ -135,7 +145,8 @@ static void cursorPositionCallBack(GLFWwindow* window, double xpos, double ypos)
     lastX = x;
     lastY = y;
 
-    m_camera->ProcessMouseMovement(xOffset, yOffset);
+    m_ship->ProcessMouseMovement(xOffset, yOffset);
+    //m_camera->ProcessMouseMovement(xOffset, yOffset);
 }
 
 static void scrollwheel_callback(GLFWwindow* window, double xoffset, double yoffset) {

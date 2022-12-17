@@ -9,6 +9,7 @@ Mesh::Mesh()
 	angle = 0.0f;
 	pivotLocation = glm::vec3(0.f, 0.f, 0.f);
 	model = glm::translate(glm::mat4(1.0f), pivotLocation);
+	position = glm::vec3(0.f, 0.f, 0.f);
 
 	// Buffer Set Up
 	if (!InitBuffers()) {
@@ -26,6 +27,7 @@ Mesh::Mesh(glm::vec3 pivot, const char* fname)
 	angle = 0.0f;
 	pivotLocation = pivot;
 	model = glm::translate(glm::mat4(1.0f), pivotLocation);
+	position = glm::vec3(0.f, 0.f, 0.f);
 
 	// Buffer Set Up
 	if (!InitBuffers()) {
@@ -45,6 +47,7 @@ Mesh::Mesh(glm::vec3 pivot, const char* fname, const char* tname)
 	angle = 0.0f;
 	pivotLocation = pivot;
 	model = glm::translate(glm::mat4(1.0f), pivotLocation);
+	position = glm::vec3(0.f, 0.f, 0.f);
 
 	// Buffer Set Up
 	if (!InitBuffers()) {
@@ -69,13 +72,77 @@ Mesh::~Mesh()
 
 void Mesh::Update(glm::mat4 matModel, double dt)
 {
-	matModel *= glm::translate(glm::mat4(1.f), speed[0] != 0.0 ?
-		glm::vec3(cos(speed[0] * dt) * dist[0], sin(speed[1] * dt) * dist[1], sin(speed[2] * dt) * dist[2]) :
-		glm::vec3(cos(speed[0] * dt) * dist[0], cos(speed[1] * dt) * dist[1], sin(speed[2] * dt) * dist[2]));
+
+	// calculate x,y,z vector for forward based on pitch/yaw
+	float xzLen = glm::cos(glm::radians(pitch));
+	float x = xzLen * glm::sin(glm::radians(yaw));
+	float y = -glm::sin(glm::radians(pitch));
+	float z = xzLen * glm::cos(glm::radians(yaw));
+
+	forward = glm::vec3(x, y, z);
+	right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
+	up = glm::normalize(glm::cross(right, forward));
+
+	position = position + velocity;
+
+	matModel *= glm::translate(glm::mat4(1.f), position);
+
 	positionMatrix = matModel;
-	matModel *= glm::rotate(glm::mat4(1.f), rotSpeed * (float)dt, rotVector);
+
+	// rotate model based on yaw/pitch/roll
+	matModel *= glm::rotate(glm::mat4(1.f), glm::radians(yaw), glm::vec3(0, 1, 0));
+	matModel *= glm::rotate(glm::mat4(1.f), glm::radians(pitch), glm::vec3(1, 0, 0));
+	matModel *= glm::rotate(glm::mat4(1.f), glm::radians(roll), glm::vec3(0, 0, 1));
+
+
 	matModel *= glm::scale(glm::vec3(scale[0], scale[1], scale[2]));
 	model = matModel;
+}
+
+void Mesh::ProcessMouseMovement(float xoffset, float yoffset)
+{
+	xoffset *= mouseSensitivity;
+	yoffset *= mouseSensitivity;
+
+	yaw -= xoffset;
+	pitch -= yoffset;
+
+	// Bounds checking
+	if (pitch > 76.0f)
+		pitch = 76.0f;
+	if (pitch < -76.0f)
+		pitch = -76.0f;
+}
+
+void Mesh::ProcessKeyboard(Camera_Movement direction, float deltaTime)
+{
+	float acceleration = 0.0005f;
+	switch (direction)
+	{
+	case FORWARD:
+		velocity += forward * acceleration;
+		break;
+	case BACKWARD:
+		velocity -= forward * acceleration;
+		break;
+	case LEFT:
+		velocity -= right * acceleration;
+		break;
+	case RIGHT:
+		velocity += right * acceleration;
+		break;
+	case ROLL_CW:
+		//roll += 0.5f;
+		break;
+	case ROLL_CCW:
+		//roll -= 0.5f;
+		break;
+	case BRAKE:
+		velocity -= velocity / 10.f;
+		break;
+	default:
+		break;
+	}
 }
 
 glm::mat4 Mesh::GetModel()

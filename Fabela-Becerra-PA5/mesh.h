@@ -16,11 +16,18 @@ public:
     Mesh(glm::vec3 pivot, const char* fname, const char* tname);
 
     void Update(glm::mat4 model, double dt);
-    void Render(GLint posAttribLoc, GLint colAttribLoc, GLint tcAttribLoc, GLint hasTextureLoc, GLint hasNormalLoc);
+    //void Render(GLint posAttribLoc, GLint colAttribLoc, GLint tcAttribLoc, GLint hasTextureLoc, GLint hasNormalLoc);
     void Render(Shader* m_shader, Camera* m_camera);
+
+    void ProcessMouseMovement(float xoffset, float yoffset);
+    void ProcessKeyboard(Camera_Movement direction, float deltaTime);
 
     glm::mat4 GetModel();
     glm::mat4 GetPosition() { return positionMatrix; }
+    glm::vec3 GetVectorPos() { return position; }
+    glm::vec3 GetVectorForward() { return forward; }
+    glm::vec3 GetVectorRight() { return right; }
+    glm::vec3 GetVectorUp() { return up; }
 
     bool InitBuffers();
     bool loadModelFromFile(const char* path);
@@ -52,6 +59,22 @@ private:
     GLuint vao;
 
     float angle;
+
+    // camera movement
+    float mouseSensitivity = SENSITIVITY;
+    float movementSpeed = SPEED;
+
+    float yaw;
+    float pitch;
+    float roll;
+
+    glm::vec3 forward;
+    glm::vec3 right;
+    glm::vec3 up;
+
+    glm::vec3 position;
+    glm::vec3 velocity;
+
 
     // Position Variables
     float rotSpeed;

@@ -28,6 +28,7 @@ class Graphics
     void Render();
 
     Camera* getCamera() { return m_camera; }
+    Mesh* getShip() { return m_mesh; }
 
   private:
     std::string ErrorString(GLenum error);

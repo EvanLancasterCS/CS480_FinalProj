@@ -7,6 +7,7 @@
 #include "graphics.h"
 
 static Camera* m_camera;
+static Mesh* m_ship;
 static bool firstMove = true;
 static float lastX = 800 / 2.f;
 static float lastY = 600 / 2.f;
@@ -36,7 +37,6 @@ class Engine
     bool m_FULLSCREEN;
     float deltaTime = 0.f;
     float lastFrame = 0.f;
-
 
     Graphics *m_graphics;
 

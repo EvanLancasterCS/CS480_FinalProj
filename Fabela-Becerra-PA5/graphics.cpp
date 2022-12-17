@@ -199,11 +199,12 @@ bool Graphics::Initialize(int width, int height)
 void Graphics::HierarchicalUpdate2(double dt) {
 	//getposition locks moon to planet
 	//glm vec 3 change location of object
-	m_mesh->Update(glm::translate(glm::mat4(1.f),glm::vec3(0,0,0)), dt);
+	m_mesh->Update(glm::translate(glm::mat4(1.f), glm::vec3(0,0,0)), dt);
 	m_sphere->Update(glm::translate(glm::mat4(1.f), glm::vec3(0, 0, 0)), dt);
 	m_sphere2->Update(m_sphere->GetPositionMatrix(), dt);
 	m_sphere3->Update(glm::translate(glm::mat4(1.f), glm::vec3(3, 0, 3)), dt);
 	m_asteroid->Update(glm::translate(glm::mat4(1.f), glm::vec3(-3, 0, -3)), dt);
+	m_camera->Update(m_mesh->GetVectorPos(), m_mesh->GetVectorForward(), m_mesh->GetVectorUp());
 }
 
 
