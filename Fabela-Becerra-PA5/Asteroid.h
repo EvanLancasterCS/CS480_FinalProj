@@ -66,6 +66,7 @@ private:
     GLint m_modelMatrix;
     GLint m_positionAttrib;
     GLint m_colorAttrib;
+    GLint m_normalMatrix;
     GLint m_tcAttrib;
     GLint m_hasTexture;
     GLint m_hasNormal;

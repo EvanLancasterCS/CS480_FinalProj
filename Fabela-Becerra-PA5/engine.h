@@ -37,6 +37,7 @@ class Engine
     bool m_FULLSCREEN;
     float deltaTime = 0.f;
     float lastFrame = 0.f;
+    float lastToggleTime = 0.f;
 
     Graphics *m_graphics;
 

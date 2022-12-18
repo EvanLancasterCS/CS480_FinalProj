@@ -13,6 +13,7 @@ using namespace std;
 #include "mesh.h"
 #include "skybox.h"
 #include "Asteroid.h"
+#include "Light.h"
 
 #define numVBOs 2;
 #define numIBs 2;
@@ -42,6 +43,7 @@ class Graphics
 
     Camera *m_camera;
     Shader *m_shader;
+    Light *m_light;
 
     GLint m_projectionMatrix;
     GLint m_viewMatrix;

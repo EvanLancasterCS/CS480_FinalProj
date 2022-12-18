@@ -109,12 +109,13 @@ void Sphere::Update(glm::mat4 matModel, double dt)
     model = matModel;
 }
 
-void Sphere::Render(Shader* m_shader)
+void Sphere::Render(Shader* m_shader, Camera* m_camera)
 {
     // Start the correct program
     m_shader->Enable();
 
     // Send in the projection and view to the shader (stay the same while camera intrinsic(perspective) and extrinsic (view) parameters are the same
+    glUniformMatrix3fv(m_normalMatrix, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(glm::mat3(m_camera->GetView() * GetModel())))));
     glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(model));
     if (hasTexture)
     {
@@ -127,6 +128,18 @@ void Sphere::Render(Shader* m_shader)
             printf("Sampler Not found not found\n");
         glUniform1i(sampler, 0);
     }
+
+    GLuint mAmbLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.ambient");
+    glProgramUniform4fv(m_shader->GetShaderProgram(), mAmbLoc, 1, matAmbient);
+
+    GLuint mDiffLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.diffuse");
+    glProgramUniform4fv(m_shader->GetShaderProgram(), mDiffLoc, 1, matDiff);
+
+    GLuint mSpecLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.spec");
+    glProgramUniform4fv(m_shader->GetShaderProgram(), mSpecLoc, 1, matSpec);
+
+    GLuint mShineLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.shininess");
+    glProgramUniform1f(m_shader->GetShaderProgram(), mShineLoc, matShininess);
 
     glBindVertexArray(vao);
     // Enable vertex attribute arrays for each vertex attrib
@@ -229,6 +242,14 @@ bool Sphere::ShaderInfo(Shader* shader)
     if (m_modelMatrix == INVALID_UNIFORM_LOCATION)
     {
         printf("m_modelMatrix not found\n");
+        anyProblem = false;
+    }
+
+    // Locate the normal matrix in the shader
+    m_normalMatrix = shader->GetUniformLocation("normMatrix");
+    if (m_normalMatrix == INVALID_UNIFORM_LOCATION)
+    {
+        printf("m_normalMatrix not found\n");
         anyProblem = false;
     }
 

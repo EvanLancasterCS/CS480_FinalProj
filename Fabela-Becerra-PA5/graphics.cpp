@@ -31,8 +31,6 @@ bool Graphics::Initialize(int width, int height)
 	}
 #endif
 
-
-
 	// Init Camera
 	m_camera = new Camera();
 	if (!m_camera->Initialize(width, height))
@@ -41,6 +39,8 @@ bool Graphics::Initialize(int width, int height)
 		return false;
 	}
 
+	m_light = new Light(m_camera->GetView());
+
 	// Set up the shaders
 	m_shader = new Shader("Shaders\\core.vs","Shaders\\core.frag");
 	if (!m_shader->Initialize())
@@ -48,12 +48,13 @@ bool Graphics::Initialize(int width, int height)
 		printf("Shader Failed to Initialize\n");
 		return false;
 	}
+	/*
 	// Set up the sky shaders
 	if (!m_shader->Initialize())
 	{
 		printf("Shader Failed to Initialize\n");
 		return false;
-	}
+	}*/
 
 	// Add the vertex shader
 	if (!m_shader->AddShader(GL_VERTEX_SHADER))
@@ -148,6 +149,10 @@ bool Graphics::Initialize(int width, int height)
 	m_sun->SetScale({ .2,.2,.2 });
 	m_sun->SetDist({ 0,0,0 });
 	m_sun->SetRotVector({ 0,1,0 });
+	m_sun->matAmbient[0] = 1;
+	m_sun->matAmbient[1] = 1;
+	m_sun->matAmbient[2] = 1;
+	m_sun->matAmbient[3] = 1;
 
 	//Mercury
 	m_mercury = new Sphere(64, "assets\\Mercury.jpg", "assets\\Mercury-n.jpg");
@@ -287,7 +292,10 @@ void Graphics::HierarchicalUpdate2(double dt) {
 	//haileys comet
 	m_asteroid->Update(glm::translate(glm::mat4(1.f), glm::vec3(0, 0, 0)), dt);
 	//camera
-	m_camera->Update(m_mesh->GetVectorPos(), m_mesh->GetVectorForward(), m_mesh->GetVectorUp());
+	if(m_camera->isExploration())
+		m_camera->Update(m_mesh->GetVectorPos(), m_mesh->GetVectorForward(), m_mesh->GetVectorUp(), dt);
+	else
+		m_camera->Update(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), dt);
 
 	//solar system
 	m_sun->Update(glm::translate(glm::mat4(1.f), glm::vec3(0, 0, 0)), dt);
@@ -308,7 +316,7 @@ void Graphics::HierarchicalUpdate2(double dt) {
 
 	
 	m_asteroid->Update(glm::translate(glm::mat4(1.f), glm::vec3(-3, 0, -3)), dt);
-	m_camera->Update(m_mesh->GetVectorPos(), m_mesh->GetVectorForward(), m_mesh->GetVectorUp());
+	//m_camera->Update(m_mesh->GetVectorPos(), m_mesh->GetVectorForward(), m_mesh->GetVectorUp());
 }
 
 
@@ -341,18 +349,18 @@ void Graphics::Render()
 
 	m_mesh->Render(m_shader, m_camera);
 	//solar system
-	m_sun->Render(m_shader);
-	/*m_mercury->Render(m_shader);
-	m_venus->Render(m_shader);
-	m_earth->Render(m_shader);
-	m_mars->Render(m_shader);
-	m_jupiter->Render(m_shader);
-	m_saturn->Render(m_shader);
-	m_neptune->Render(m_shader);
-	m_moon->Render(m_shader);
-	m_ceres->Render(m_shader);
-	m_eris->Render(m_shader);
-	m_haumea->Render(m_shader);*/
+	m_sun->Render(m_shader, m_camera);
+	m_mercury->Render(m_shader, m_camera);
+	m_venus->Render(m_shader, m_camera);
+	m_earth->Render(m_shader, m_camera);
+	m_mars->Render(m_shader, m_camera);
+	m_jupiter->Render(m_shader, m_camera);
+	m_saturn->Render(m_shader, m_camera);
+	m_neptune->Render(m_shader, m_camera);
+	m_moon->Render(m_shader, m_camera);
+	m_ceres->Render(m_shader, m_camera);
+	m_eris->Render(m_shader, m_camera);
+	m_haumea->Render(m_shader, m_camera);
 	
 	
 	// Get any errors from OpenGL
@@ -420,6 +428,41 @@ bool Graphics::collectShPrLocs() {
 		printf("hasTexture uniform not found\n");
 		anyProblem = false;
 	}
+
+	GLuint globalAmbLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "GlobalAmbient");
+	if (globalAmbLoc == INVALID_UNIFORM_LOCATION)
+	{
+		printf("globalAmbient element not found\n");
+		anyProblem = false;
+	}
+	glProgramUniform4fv(m_shader->GetShaderProgram(), globalAmbLoc, 1, m_light->m_globalAmbient);
+
+	GLuint lightALoc = glGetUniformLocation(m_shader->GetShaderProgram(), "light.ambient");
+	if (globalAmbLoc == INVALID_UNIFORM_LOCATION)
+	{
+		printf("lightambient element not found\n");
+		anyProblem = false;
+	}
+	glProgramUniform4fv(m_shader->GetShaderProgram(), lightALoc, 1, m_light->m_lightAmbient);
+
+	GLuint lightDLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "light.diffuse");
+	if (globalAmbLoc == INVALID_UNIFORM_LOCATION)
+	{
+		printf("lightdiffuse element not found\n");
+		anyProblem = false;
+	}
+	glProgramUniform4fv(m_shader->GetShaderProgram(), lightDLoc, 1, m_light->m_lightDiffuse);
+
+	GLuint lightSLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "light.spec");
+	if (globalAmbLoc == INVALID_UNIFORM_LOCATION)
+	{
+		printf("lightspecular element not found\n");
+		anyProblem = false;
+	}
+	glProgramUniform4fv(m_shader->GetShaderProgram(), lightSLoc, 1, m_light->m_lightSpecular);
+
+	GLuint lightPosLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "light.position");
+	glProgramUniform3fv(m_shader->GetShaderProgram(), lightSLoc, 1, m_light->m_lightPositionViewSpace);
 
 	return anyProblem;
 }

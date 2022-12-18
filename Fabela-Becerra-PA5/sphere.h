@@ -2,6 +2,7 @@
 #include <vector>
 #include "Texture.h"
 #include "shader.h"
+#include "camera.h"
 
 class Sphere
 {
@@ -12,7 +13,7 @@ public:
 
     bool ShaderInfo(Shader* shader);
     void Update(glm::mat4 matModel, double dt);
-    void Render(Shader* m_shader);
+    void Render(Shader* m_shader, Camera* m_camera);
 
     // Get functions
     glm::mat4 GetModel() { return model; }
@@ -37,6 +38,11 @@ public:
     // Public Variables
     bool hasTexture;
     bool hasNormal;
+
+    float matAmbient[4] = { 0.3, 0.3, 1, 0.3 };
+    float matDiff[4] = { 1.0, 1.0, 1.0, 1.0 };
+    float matSpec[4] = { 1, 1, 1, 1 };
+    float matShininess = 1.0;
 
 private:
     void init(int);
@@ -79,6 +85,7 @@ private:
     GLint m_projectionMatrix;
     GLint m_viewMatrix;
     GLint m_modelMatrix;
+    GLint m_normalMatrix;
     GLint m_positionAttrib;
     GLint m_colorAttrib;
     GLint m_tcAttrib;

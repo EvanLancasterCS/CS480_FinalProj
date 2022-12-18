@@ -92,6 +92,7 @@ void Asteroid::Render(Shader* m_shader, Camera* m_camera)
 	glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection()));
 	glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
 	glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix3fv(m_normalMatrix, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(glm::mat3(m_camera->GetView() * GetModel())))));
 	if (hasTexture)
 	{
 		glActiveTexture(GL_TEXTURE0);
@@ -216,6 +217,14 @@ bool Asteroid::ShaderInfo(Shader* shader)
 	if (m_modelMatrix == INVALID_UNIFORM_LOCATION)
 	{
 		printf("m_modelMatrix not found\n");
+		anyProblem = false;
+	}
+
+	// Locate the normal matrix in the shader
+	m_normalMatrix = shader->GetUniformLocation("normMatrix");
+	if (m_normalMatrix == INVALID_UNIFORM_LOCATION)
+	{
+		printf("m_normalMatrix not found\n");
 		anyProblem = false;
 	}
 

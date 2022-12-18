@@ -72,7 +72,33 @@ Mesh::~Mesh()
 
 void Mesh::Update(glm::mat4 matModel, double dt)
 {
+	float radX = glm::radians(pitch);
+	float radY = glm::radians(yaw);
+	float radZ = glm::radians(roll);
 
+	glm::mat3 matX = glm::mat3(1, 0, 0, 
+							0, glm::cos(radX), glm::sin(radX), 
+							0, -glm::sin(radX), glm::cos(radX));
+
+	glm::mat3 matY = glm::mat3(glm::cos(radY), 0, -glm::sin(radY), 
+								0, 1, 0, 
+								glm::sin(radY), 0, glm::cos(radY));
+	glm::mat3 matZ = glm::mat3(glm::cos(radZ), glm::sin(radZ), 0, 
+								-glm::sin(radZ), glm::cos(radZ), 0, 
+								0, 0, 1);
+	glm::mat3 axes = glm::mat3(1, 0, 0, 
+								0, 1, 0, 
+								0, 0, 1);
+
+	axes *= matY;
+	axes *= matX;
+	axes *= matZ;
+
+	forward = axes[2];
+	right = axes[0] * -1.f;
+	up = axes[1];
+	
+	/*
 	// calculate x,y,z vector for forward based on pitch/yaw
 	float xzLen = glm::cos(glm::radians(pitch));
 	float x = xzLen * glm::sin(glm::radians(yaw));
@@ -80,9 +106,12 @@ void Mesh::Update(glm::mat4 matModel, double dt)
 	float z = xzLen * glm::cos(glm::radians(yaw));
 
 	forward = glm::vec3(x, y, z);
-	right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
+	//right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
+	right.x = glm::cos(glm::radians(yaw));
+	right.y = 0;
+	right.z = -glm::sin(glm::radians(yaw));
 	up = glm::normalize(glm::cross(right, forward));
-
+	*/
 	position = position + velocity;
 
 	matModel *= glm::translate(glm::mat4(1.f), position);
@@ -108,10 +137,14 @@ void Mesh::ProcessMouseMovement(float xoffset, float yoffset)
 	pitch -= yoffset;
 
 	// Bounds checking
-	if (pitch > 76.0f)
-		pitch = 76.0f;
-	if (pitch < -76.0f)
-		pitch = -76.0f;
+	if (pitch > 90.f)
+		pitch = 89.f;
+	if (pitch < -90.f)
+		pitch = -89.f;
+	if (yaw > 360.f)
+		yaw = 0.f;
+	if (yaw < 0.f)
+		yaw = 360.f;
 }
 
 void Mesh::ProcessKeyboard(Camera_Movement direction, float deltaTime)
@@ -159,6 +192,7 @@ void Mesh::Render(Shader* m_shader, Camera* m_camera)
 	glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection()));
 	glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
 	glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix3fv(m_normalMatrix, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(glm::mat3(m_camera->GetView() * GetModel())))));
 	if (hasTexture)
 	{
 		glActiveTexture(GL_TEXTURE0);
@@ -170,6 +204,23 @@ void Mesh::Render(Shader* m_shader, Camera* m_camera)
 			printf("Sampler Not found not found\n");
 		glUniform1i(sampler, 0);
 	}
+
+	float matAmbient[4] = { 0.3, 0.3, 0.3, 1.0 };
+	float matDiff[4] = { 1.0, 1.0, 1.0, 1.0 };
+	float matSpec[4] = { 1, 1, 1, 1 };
+	float matShininess = 50.0;
+
+	GLuint mAmbLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.ambient");
+	glProgramUniform4fv(m_shader->GetShaderProgram(), mAmbLoc, 1, matAmbient);
+
+	GLuint mDiffLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.diffuse");
+	glProgramUniform4fv(m_shader->GetShaderProgram(), mDiffLoc, 1, matDiff);
+
+	GLuint mSpecLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.spec");
+	glProgramUniform4fv(m_shader->GetShaderProgram(), mSpecLoc, 1, matSpec);
+
+	GLuint mShineLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.shininess");
+	glProgramUniform1f(m_shader->GetShaderProgram(), mShineLoc, matShininess);
 
 	glBindVertexArray(vao);
 	// Enable vertex attribute arrays for each vertex attrib
@@ -283,6 +334,14 @@ bool Mesh::ShaderInfo(Shader* shader)
 	if (m_modelMatrix == INVALID_UNIFORM_LOCATION)
 	{
 		printf("m_modelMatrix not found\n");
+		anyProblem = false;
+	}
+
+	// Locate the normal matrix in the shader
+	m_normalMatrix = shader->GetUniformLocation("normMatrix");
+	if (m_normalMatrix == INVALID_UNIFORM_LOCATION)
+	{
+		printf("m_normalMatrix not found\n");
 		anyProblem = false;
 	}
 
