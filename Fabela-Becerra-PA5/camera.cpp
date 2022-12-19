@@ -20,6 +20,7 @@ void Camera::Update(glm::vec3 focus, glm::vec3 frontVec, glm::vec3 upVec, float 
         cameraUp = upVec;
 
         view = glm::lookAt(cameraPosition, focusPoint, cameraUp);
+        cameraPos = cameraPosition;
 
         projection = glm::perspective(glm::radians(fov), aspect, 0.01f, 100.0f);
     }
@@ -37,6 +38,7 @@ void Camera::Update(glm::vec3 focus, glm::vec3 frontVec, glm::vec3 upVec, float 
         }
 
         glm::vec3 cameraPosition = focus + glm::vec3(x, 0, z);
+        cameraPos = cameraPosition;
 
         view = glm::lookAt(cameraPosition, focus + focusOffset, cameraUp);
 

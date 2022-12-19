@@ -149,10 +149,10 @@ bool Graphics::Initialize(int width, int height)
 	m_sun->SetScale({ .2,.2,.2 });
 	m_sun->SetDist({ 0,0,0 });
 	m_sun->SetRotVector({ 0,1,0 });
-	m_sun->matAmbient[0] = 1;
-	m_sun->matAmbient[1] = 1;
-	m_sun->matAmbient[2] = 1;
-	m_sun->matAmbient[3] = 1;
+	m_sun->matAmbient[0] = 4;
+	m_sun->matAmbient[1] = 4;
+	m_sun->matAmbient[2] = 4;
+	m_sun->matAmbient[3] = 4;
 
 	//Mercury
 	m_mercury = new Sphere(64, "assets\\Mercury.jpg", "assets\\Mercury-n.jpg");

@@ -6,7 +6,7 @@ Light::Light()
 }
 Light::Light(glm::mat4 viewMatrix)
 {
-	m_lightPosition = glm::vec3(0, 10, 0);
+	m_lightPosition = glm::vec3(-10, -10, 0);
 
 	m_lightPositionViewSpace[0] = glm::vec4((viewMatrix * glm::vec4(m_lightPosition, 1.0f))).x;
 	m_lightPositionViewSpace[1] = glm::vec4((viewMatrix * glm::vec4(m_lightPosition, 1.0f))).y;
@@ -16,15 +16,15 @@ Light::Light(glm::mat4 viewMatrix)
 	m_lightAmbient[0] = 0.5;
 	m_lightAmbient[1] = 0.4;
 	m_lightAmbient[2] = 0.4;
-	m_lightAmbient[3] = 0.4;
+	m_lightAmbient[3] = 1;
 	m_lightDiffuse[0] = 0.7;
 	m_lightDiffuse[1] = 0.7;
 	m_lightDiffuse[2] = 0.7;
 	m_lightDiffuse[3] = 1;
-	m_lightSpecular[0] = .1;
-	m_lightSpecular[1] = .1;
-	m_lightSpecular[2] = .1;
-	m_lightSpecular[3] = .1;
+	m_lightSpecular[0] = 1;
+	m_lightSpecular[1] = 1;
+	m_lightSpecular[2] = 1;
+	m_lightSpecular[3] = 1;
 	m_globalAmbient[0] = 0.2;
 	m_globalAmbient[1] = 0.2;
 	m_globalAmbient[2] = 0.2;

@@ -33,6 +33,8 @@ out vec4 frag_texture;
 out vec4 frag_normal;
 out vec4 frag_color;
 
+uniform vec3 viewPos;
+
 void main(void) 
 {
     vec3 L = normalize(varLdir);
@@ -45,8 +47,8 @@ void main(void)
     if(hasNormal)
     {
         norm = normalize(normal);
-        norm = normalize(varNorm + texture(normalSP, tc).rgb*2 - 1); 
-        norm = normalize(norm * 2.0 - 1.0); // map from [0, 1] to [-1, 1]
+        norm = normalize(texture(normalSP, tc).rgb * varNorm);//varNorm + texture(normalSP, tc).rgb*2 - 1); 
+        //norm = normalize(norm * 2.0 - 1.0); // map from [0, 1] to [-1, 1]
     }
     else 
         norm = normalize(varNorm);
@@ -60,6 +62,11 @@ void main(void)
     vec3 amb = ((GlobalAmbient)+(texture(textureSP,tc)*light.ambient * material.ambient)/1).xyz;
     vec3 dif = light.diffuse.xyz * material.diffuse.xyz * texture(textureSP, tc).xyz * max(0.0, cosTheta);
     vec3 spc = light.spec.xyz * material.spec.xyz * pow(max(0.0,cosPhi),material.shininess);
+
+    vec3 viewDir = normalize(viewPos - varPos);
+    vec3 reflectDir = normalize(reflect(-varLdir, norm));
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    spc = light.spec.xyz * material.spec.xyz * spec;
 
     frag_texture = vec4(amb+dif+spc, 1);
 } 

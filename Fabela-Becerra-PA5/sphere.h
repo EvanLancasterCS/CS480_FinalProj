@@ -39,9 +39,9 @@ public:
     bool hasTexture;
     bool hasNormal;
 
-    float matAmbient[4] = { 0.3, 0.3, 1, 0.3 };
+    float matAmbient[4] = { 0.3, 0.3, 1, 1 };
     float matDiff[4] = { 1.0, 1.0, 1.0, 1.0 };
-    float matSpec[4] = { 1, 1, 1, 1 };
+    float matSpec[4] = { 0.1f, 0.1f, 0.1f, 1.f };
     float matShininess = 1.0;
 
 private:

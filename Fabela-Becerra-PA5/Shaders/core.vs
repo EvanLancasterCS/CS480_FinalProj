@@ -42,10 +42,15 @@ void main(void)
 { 
     vec4 v = vec4(v_position, 1.0); 
     varPos = (viewMatrix * modelMatrix * vec4(v_position,1.0f)).xyz;
+    varPos = (modelMatrix * v).xyz;
+
     varLdir = light.position-varPos;
     normal = v_normal; 
     tc = v_tc;
     gl_Position = (projectionMatrix * viewMatrix * modelMatrix) * v;
+    gl_Position = (projectionMatrix * viewMatrix * vec4(varPos, 1.0));
+    
     varNorm = normMatrix * v_normal;
+    varNorm = mat3(transpose(inverse(modelMatrix))) * v_normal;
 
 } 

@@ -105,6 +105,26 @@ void Asteroid::Render(Shader* m_shader, Camera* m_camera)
 		glUniform1i(sampler, 0);
 	}
 
+	float matAmbient[4] = { 0.3, 0.3, 0.3, 1.0 };
+	float matDiff[4] = { 1.0, 1.0, 1.0, 10.0 };
+	float matSpec[4] = { 10, 1, 1, 1 };
+	float matShininess = 10.0;
+
+	GLuint mAmbLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.ambient");
+	glProgramUniform4fv(m_shader->GetShaderProgram(), mAmbLoc, 1, matAmbient);
+
+	GLuint mDiffLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.diffuse");
+	glProgramUniform4fv(m_shader->GetShaderProgram(), mDiffLoc, 1, matDiff);
+
+	GLuint mSpecLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.spec");
+	glProgramUniform4fv(m_shader->GetShaderProgram(), mSpecLoc, 1, matSpec);
+
+	GLuint mShineLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.shininess");
+	glProgramUniform1f(m_shader->GetShaderProgram(), mShineLoc, matShininess);
+
+	GLuint mViewPos = glGetUniformLocation(m_shader->GetShaderProgram(), "viewPos");
+	glProgramUniform3f(m_shader->GetShaderProgram(), mViewPos, m_camera->cameraPos.x, m_camera->cameraPos.y, m_camera->cameraPos.z);
+
 	glBindVertexArray(vao);
 	// Enable vertex attribute arrays for each vertex attrib
 	glEnableVertexAttribArray(m_positionAttrib);

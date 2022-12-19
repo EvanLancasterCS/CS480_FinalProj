@@ -53,6 +53,8 @@ class Camera
     // camera options
     float aspect = 0;
     float fov = 40.f;
+
+    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
   private:
 
     double x = 0.0;
@@ -62,7 +64,6 @@ class Camera
     glm::mat4 view;
 
     const float cameraSpeed = 3.5f;
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
     glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -12.0f);
     glm::vec3 cameraUp = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 cameraRight;

@@ -141,6 +141,9 @@ void Sphere::Render(Shader* m_shader, Camera* m_camera)
     GLuint mShineLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.shininess");
     glProgramUniform1f(m_shader->GetShaderProgram(), mShineLoc, matShininess);
 
+    GLuint mViewPos = glGetUniformLocation(m_shader->GetShaderProgram(), "viewPos");
+    glProgramUniform3f(m_shader->GetShaderProgram(), mViewPos, m_camera->cameraPos.x, m_camera->cameraPos.y, m_camera->cameraPos.z);
+
     glBindVertexArray(vao);
     // Enable vertex attribute arrays for each vertex attrib
     glEnableVertexAttribArray(m_positionAttrib);

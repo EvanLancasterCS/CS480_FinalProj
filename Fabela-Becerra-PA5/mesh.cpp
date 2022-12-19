@@ -206,9 +206,9 @@ void Mesh::Render(Shader* m_shader, Camera* m_camera)
 	}
 
 	float matAmbient[4] = { 0.3, 0.3, 0.3, 1.0 };
-	float matDiff[4] = { 1.0, 1.0, 1.0, 1.0 };
+	float matDiff[4] = { 1.0, 1.0, 1.0, 10.0 };
 	float matSpec[4] = { 1, 1, 1, 1 };
-	float matShininess = 50.0;
+	float matShininess = 100.0;
 
 	GLuint mAmbLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.ambient");
 	glProgramUniform4fv(m_shader->GetShaderProgram(), mAmbLoc, 1, matAmbient);
@@ -221,6 +221,9 @@ void Mesh::Render(Shader* m_shader, Camera* m_camera)
 
 	GLuint mShineLoc = glGetUniformLocation(m_shader->GetShaderProgram(), "material.shininess");
 	glProgramUniform1f(m_shader->GetShaderProgram(), mShineLoc, matShininess);
+
+	GLuint mViewPos = glGetUniformLocation(m_shader->GetShaderProgram(), "viewPos");
+	glProgramUniform3f(m_shader->GetShaderProgram(), mViewPos, m_camera->cameraPos.x, m_camera->cameraPos.y, m_camera->cameraPos.z);
 
 	glBindVertexArray(vao);
 	// Enable vertex attribute arrays for each vertex attrib
