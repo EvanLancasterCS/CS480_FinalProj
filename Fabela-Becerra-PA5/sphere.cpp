@@ -10,6 +10,8 @@ Sphere::Sphere()
     rotSpeed = 0;
     rotVector = glm::vec3(0, 0, 0);
     scale = { 1, 1, 1 };
+
+    posVertex = glm::vec3(0, 0, 0);
 }
 
 Sphere::Sphere(Sphere* otherSphere, glm::vec3 startAngle)
@@ -29,6 +31,8 @@ Sphere::Sphere(Sphere* otherSphere, glm::vec3 startAngle)
     rotSpeed = 0;
     rotVector = glm::vec3(0, 0, 0);
     scale = { 1, 1, 1 };
+
+    posVertex = glm::vec3(0, 0, 0);
 }
 
 Sphere::Sphere(const int prec, const char* fname, const char* nname) {
@@ -56,6 +60,8 @@ Sphere::Sphere(const int prec, const char* fname, const char* nname) {
     rotSpeed = 0;
     rotVector = glm::vec3(0, 0, 0);
     scale = { 1, 1, 1 };
+
+    posVertex = glm::vec3(0, 0, 0);
 }
 
 void Sphere::setupVertices() {

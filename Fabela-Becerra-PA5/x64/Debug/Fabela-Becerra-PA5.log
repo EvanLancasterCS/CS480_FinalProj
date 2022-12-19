@@ -1,15 +1,5 @@
-﻿  engine.cpp
+﻿  graphics.cpp
 C:\Users\Evan\Desktop\PA-5\Fabela-Becerra-PA5\sphere.h(42,45): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Evan\Desktop\PA-5\Fabela-Becerra-PA5\engine.cpp(67,24): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Evan\Desktop\PA-5\Fabela-Becerra-PA5\engine.cpp(123,23): warning C4244: 'return': conversion from 'double' to 'unsigned int', possible loss of data
-C:\Users\Evan\Desktop\PA-5\Fabela-Becerra-PA5\engine.cpp(167,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  graphics.cpp
-C:\Users\Evan\Desktop\PA-5\Fabela-Becerra-PA5\sphere.h(42,45): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Evan\Desktop\PA-5\Fabela-Becerra-PA5\graphics.cpp(296,95): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Evan\Desktop\PA-5\Fabela-Becerra-PA5\graphics.cpp(298,80): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  main.cpp
-C:\Users\Evan\Desktop\PA-5\Fabela-Becerra-PA5\sphere.h(42,45): warning C4305: 'initializing': truncation from 'double' to 'float'
-  sphere.cpp
-C:\Users\Evan\Desktop\PA-5\Fabela-Becerra-PA5\sphere.h(42,45): warning C4305: 'initializing': truncation from 'double' to 'float'
-  Generating Code...
+C:\Users\Evan\Desktop\PA-5\Fabela-Becerra-PA5\graphics.cpp(307,95): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Evan\Desktop\PA-5\Fabela-Becerra-PA5\graphics.cpp(316,96): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   Fabela-Becerra-PA5.vcxproj -> C:\Users\Evan\Desktop\PA-5\x64\Debug\Fabela-Becerra-PA5.exe

@@ -83,6 +83,12 @@ void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
         else
             currentMode = Observation;
         break;
+    case FORWARD:
+        observationIndex++;
+        break;
+    case BACKWARD:
+        observationIndex--;
+        break;
     default:
         break;
         /*

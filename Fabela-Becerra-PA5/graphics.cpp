@@ -275,6 +275,17 @@ bool Graphics::Initialize(int width, int height)
 	m_asteroid->SetDist({ 10,10,10 });
 	m_asteroid->SetRotVector({ 1,1,1 });
 
+	planets = new Sphere * [10];
+	planets[0] = m_sun;
+	planets[1] = m_moon;
+	planets[2] = m_earth;
+	planets[3] = m_ceres;
+	planets[4] = m_eris;
+	planets[5] = m_haumea;
+	planets[6] = m_jupiter;
+	planets[7] = m_mars;
+	planets[8] = m_mercury;
+	planets[9] = m_neptune;
 
 	//enable depth testing
 	glEnable(GL_DEPTH_TEST);
@@ -295,7 +306,16 @@ void Graphics::HierarchicalUpdate2(double dt) {
 	if(m_camera->isExploration())
 		m_camera->Update(m_mesh->GetVectorPos(), m_mesh->GetVectorForward(), m_mesh->GetVectorUp(), dt);
 	else
-		m_camera->Update(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), dt);
+	{
+		int len = 10;
+		m_camera->observationIndex %= len;
+		if (m_camera->observationIndex < 0)
+			m_camera->observationIndex = len + m_camera->observationIndex;
+
+		Sphere* currentPlanet = planets[m_camera->observationIndex];
+		m_camera->Update(currentPlanet->GetPositionVertex(), glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), dt);
+
+	}
 
 	//solar system
 	m_sun->Update(glm::translate(glm::mat4(1.f), glm::vec3(0, 0, 0)), dt);

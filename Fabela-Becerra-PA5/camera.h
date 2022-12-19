@@ -55,6 +55,8 @@ class Camera
     float fov = 40.f;
 
     glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
+
+    int observationIndex = 0;
   private:
 
     double x = 0.0;

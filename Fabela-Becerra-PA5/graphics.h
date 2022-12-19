@@ -53,7 +53,6 @@ class Graphics
     GLint m_tcAttrib;
     GLint m_hasTexture;
 
-
     Sphere* m_sun; //done
     Sphere* m_moon; //done
     Sphere* m_earth; //done
@@ -67,6 +66,8 @@ class Graphics
     Sphere* m_saturn;//done
     Sphere* m_uranus;//done
     Sphere* m_venus;//done
+
+    Sphere** planets;// = { m_sun, m_mercury, m_venus, m_earth, m_mars, m_jupiter, m_saturn, m_neptune, m_moon, m_ceres, m_eris, m_haumea };
 
     skybox* m_skybox;
     Shader* m_skyshader;

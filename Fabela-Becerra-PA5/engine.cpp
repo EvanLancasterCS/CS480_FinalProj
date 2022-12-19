@@ -93,6 +93,19 @@ void Engine::ProcessInput()
         if (glfwGetKey(m_window->getWindow(), GLFW_KEY_SPACE) == GLFW_PRESS)
             m_ship->ProcessKeyboard(BRAKE, deltaTime);
     }
+    else if (m_camera->isObservation())
+    {
+        if (currentFrame - lastToggleTime > 0.2f) {
+            if (glfwGetKey(m_window->getWindow(), GLFW_KEY_SPACE) == GLFW_PRESS) {
+                m_camera->ProcessKeyboard(FORWARD, deltaTime);
+                lastToggleTime = currentFrame;
+            }
+            if (glfwGetKey(m_window->getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
+                m_camera->ProcessKeyboard(BACKWARD, deltaTime);
+                lastToggleTime = currentFrame;
+            }
+        }
+    }
 
     if (glfwGetKey(m_window->getWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
     {
